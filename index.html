@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>METAMORPH | 30-Day Neural Weight Loss OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background: #f8fafc; color: #1e293b; transition: all 0.2s; }
+    body.dark { background: #0f172a; color: #e2e8f0; }
+    body.dark .card, body.dark .widget, body.dark .navbar, body.dark footer, body.dark .modal-content, body.dark .exercise-item { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+    body.dark .btn-outline { border-color: #64748b; color: #cbd5e1; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+    .navbar { background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.02); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #eef2f6; backdrop-filter: blur(4px); }
+    body.dark .navbar { background: #1e293b; border-bottom-color: #334155; }
+    .nav-flex { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; flex-wrap: wrap; gap: 1rem; }
+    .logo { font-weight: 800; font-size: 1.6rem; background: linear-gradient(135deg, #2b9348, #0f7b3a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nav-links { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; }
+    .nav-links a { text-decoration: none; font-weight: 500; color: #334155; cursor: pointer; }
+    body.dark .nav-links a { color: #cbd5e1; }
+    .btn-primary { background: #2b9348; color: white; border: none; padding: 0.6rem 1.3rem; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-outline { background: transparent; border: 1.5px solid #2b9348; color: #2b9348; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 600; cursor: pointer; }
+    .btn-toggle, .btn-login { background: none; border: 1px solid #cbd5e1; padding: 0.5rem 1rem; border-radius: 40px; cursor: pointer; }
+    .card { background: white; border-radius: 28px; padding: 1.5rem; box-shadow: 0 8px 20px rgba(0,0,0,0.02); border: 1px solid #f0f2f5; margin-bottom: 1.5rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem; }
+    .widget { background: white; border-radius: 24px; padding: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #f0f2f5; }
+    body.dark .widget { background: #1e293b; }
+    .stat-number { font-size: 2rem; font-weight: 800; color: #2b9348; }
+    .progress { background: #e2e8f0; border-radius: 20px; height: 10px; overflow: hidden; margin: 0.8rem 0; }
+    .progress-fill { background: #2b9348; width: 0%; height: 100%; border-radius: 20px; transition: width 0.3s; }
+    .badge { background: #e9f7ef; color: #1e7b3c; border-radius: 40px; padding: 0.2rem 0.8rem; font-size: 0.7rem; font-weight: 600; }
+    .exercise-item { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem; border-bottom: 1px solid #edf2f7; flex-wrap: wrap; gap: 0.5rem; }
+    .exercise-name { font-weight: 600; flex: 2; }
+    .completed-exercise { text-decoration: line-through; opacity: 0.6; }
+    .meal-input-area { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .meal-input-area input { padding: 0.8rem; border-radius: 60px; border: 1px solid #e2e8f0; flex: 1; background: #f9fafb; }
+    .food-log { max-height: 300px; overflow-y: auto; }
+    .food-item { display: flex; justify-content: space-between; padding: 0.6rem; border-bottom: 1px solid #eef2f6; flex-wrap: wrap; gap: 0.5rem; }
+    .macro-card { background: #f1f5f9; border-radius: 20px; padding: 0.8rem; text-align: center; flex: 1; }
+    body.dark .macro-card { background: #334155; }
+    h2 { font-size: 1.8rem; margin: 1rem 0 0.5rem; font-weight: 700; }
+    .notification-toast { position: fixed; bottom: 20px; right: 20px; background: #2b9348; color: white; padding: 12px 20px; border-radius: 60px; z-index: 1000; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: fadeInUp 0.3s ease; z-index: 1001; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(3px); }
+    .modal-content { background: white; max-width: 450px; width: 90%; border-radius: 32px; padding: 1.8rem; animation: modalSlideIn 0.3s ease; }
+    @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    .day-badge { display: inline-block; width: 45px; text-align: center; margin: 4px; padding: 8px 0; border-radius: 60px; background: #eef2ff; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .day-completed { background: #2b9348; color: white; }
+    .day-locked { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; opacity: 0.6; }
+    .day-current { border: 2px solid #f59e0b; box-shadow: 0 0 0 2px #fef3c7; }
+    .input-group { margin-bottom: 1rem; }
+    .input-group label { display: block; font-weight: 500; margin-bottom: 0.3rem; }
+    .input-group input { width: 100%; padding: 0.7rem; border-radius: 60px; border: 1px solid #cbd5e1; background: #f9fafb; font-size: 1rem; }
+    body.dark .input-group input { background: #334155; border-color: #475569; color: white; }
+    hr { margin: 1rem 0; }
+    .user-avatar { display: flex; align-items: center; gap: 8px; background: #e9f7ef; padding: 5px 12px; border-radius: 40px; }
+    body.dark .user-avatar { background: #334155; }
+    .export-btn { background: #2563eb; color: white; border: none; }
+    .footer-export { margin-top: 2rem; text-align: center; padding: 1rem; }
+    .weight-input-highlight { background: linear-gradient(135deg, #e9f7ef, #d1fae5); border-radius: 24px; padding: 1rem; }
+    body.dark .weight-input-highlight { background: linear-gradient(135deg, #1e3a2f, #1e293b); }
+    .modal h3 { margin-bottom: 0.5rem; }
+    .modal p { color: #64748b; margin-bottom: 1rem; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-flex">
+    <div class="logo"><i class="fas fa-crown"></i> METAMORPH</div>
+    <div class="nav-links">
+      <a data-page="landing">Home</a>
+      <a data-page="dashboard">Dashboard</a>
+      <a data-page="challenge">30-Day</a>
+      <a data-page="workout">Workouts</a>
+      <a data-page="nutrition">Nutrition AI</a>
+      <a data-page="water">Water</a>
+      <button class="btn-toggle" id="darkModeToggle"><i class="fas fa-moon"></i> Dark</button>
+      <div id="googleLoginBtn"></div>
+      <div id="userInfo" style="display:none;" class="user-avatar">
+        <i class="fas fa-user-circle"></i>
+        <span id="userEmail"></span> 
+        <button id="signOutBtn" style="background:none; border:none; cursor:pointer; margin-left: 5px;"><i class="fas fa-sign-out-alt"></i></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main id="appRoot">
+  <div id="landingPage">
+    <div class="container" style="padding: 2rem 0;">
+      <div style="text-align: center; padding: 2rem 0;">
+        <h1 style="font-size: 3rem; font-weight: 800;">Transform Your Body in <span style="color:#2b9348;">30 Days</span></h1>
+        <p style="font-size: 1.2rem; margin: 1rem 0;">Google Sign-in · AI Calorie Tracking · Download Your Excel Report</p>
+        <button class="btn-primary" id="startChallengeBtn">🔥 Start 30-Day Challenge</button>
+        <button class="btn-outline" id="trackProgressBtn">📊 Track Progress</button>
+      </div>
+      <div class="grid-2">
+        <div class="card"><i class="fas fa-dumbbell" style="font-size: 2rem; color:#2b9348;"></i><h3>15+ Weight Loss Exercises</h3><p>Daily workout checklist & calorie burn</p></div>
+        <div class="card"><i class="fas fa-robot" style="font-size: 2rem; color:#3b82f6;"></i><h3>AI Calorie Estimator</h3><p>Describe your meal, we calculate macros</p></div>
+      </div>
+      <div class="footer-export">
+        <button id="downloadExcelBtn" class="btn-primary export-btn"><i class="fas fa-file-excel"></i> Download Challenge Data (Excel/CSV)</button>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Export your 30-day progress, workouts, meals & hydration</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboardPage" style="display:none;">
+    <div class="container">
+      <h2>📊 Your Wellness Dashboard</h2>
+      <div class="dashboard-grid">
+        <div class="widget"><i class="fas fa-weight-scale"></i> Current Weight <div class="stat-number" id="dashCurrentWeight">-- kg</div>Goal: <span id="dashGoalWeight">--</span> kg</div>
+        <div class="widget"><i class="fas fa-bullseye"></i> Goal Progress <div class="stat-number" id="weightLeft">--</div>kg to goal</div>
+        <div class="widget"><i class="fas fa-fire"></i> Calories Burned <div class="stat-number" id="totalBurnCalsDash">0</div>Today</div>
+        <div class="widget"><i class="fas fa-calendar-week"></i> Streak <div class="stat-number" id="streakDaysDash">0</div>days 🔥</div>
+      </div>
+      <div class="progress"><div class="progress-fill" id="dailyProgressFillDash" style="width:0%"></div><span id="dailyPercentTextDash">0% daily progress</span></div>
+      <div class="grid-2">
+        <div class="card"><canvas id="weightChart" width="300" height="180"></canvas><p>Weight trend (last 7 days)</p></div>
+        <div class="card"><canvas id="waterChart" width="300" height="180"></canvas><p>Hydration (L)</p></div>
+        <div class="card"><canvas id="caloriesChart" width="300" height="180"></canvas><p>Calorie intake vs goal</p></div>
+      </div>
+      <div class="card"><h3>Weekly Workout Completion</h3><canvas id="workoutCompletionChart"></canvas></div>
+    </div>
+  </div>
+
+  <div id="challengePage" style="display:none;">
+    <div class="container">
+      <h2>🔥 30-Day Transformation Challenge</h2>
+      <div class="card">
+        <div class="progress"><div class="progress-fill" id="challengeFill" style="width:0%"></div></div>
+        <p id="challengeInfo" style="margin: 0.5rem 0;">You can only mark 1 day as completed per calendar day.</p>
+        <div id="challengeDaysGrid" style="display: flex; flex-wrap: wrap; gap: 8px; margin: 1rem 0;"></div>
+        <button id="completeTodayBtn" class="btn-primary"><i class="fas fa-check-circle"></i> Mark Today's Day as Done</button>
+        <p id="nextDayMsg" style="margin-top: 1rem; font-size: 0.8rem; color: #f59e0b;"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="workoutPage" style="display:none;"><div class="container"><h2><i class="fas fa-heartbeat"></i> 15 Weight Loss Workouts</h2><div class="card"><div id="workoutExerciseList"></div><div class="progress"><div class="progress-fill" id="workoutProgressFill" style="width:0%"></div></div><p id="workoutCompletedCount">0/15 exercises completed</p><button id="resetWorkoutsBtn" class="btn-outline">Reset Today</button></div></div></div>
+
+  <div id="nutritionPage" style="display:none;"><div class="container"><h2><i class="fas fa-brain"></i> AI Calorie Tracker</h2><div class="card"><div class="meal-input-area"><input type="text" id="mealDescription" placeholder="e.g., grilled chicken salad, rice, avocado toast"><button id="analyzeMealBtn" class="btn-primary">AI Estimate</button></div><div id="aiSuggestion" style="background:#eef2ff; padding:0.8rem; border-radius:20px; margin-bottom:1rem;"></div><h3>Today's Food Log</h3><div id="foodLogList" class="food-log"></div><div class="grid-2" style="margin-top:1rem;"><div class="macro-card">🔥 Calories: <span id="totalCaloriesSpan">0</span></div><div class="macro-card">🥩 Protein: <span id="totalProteinSpan">0</span>g</div><div class="macro-card">🍚 Carbs: <span id="totalCarbsSpan">0</span>g</div><div class="macro-card">🧈 Fats: <span id="totalFatsSpan">0</span>g</div></div><button id="clearMealsBtn" class="btn-outline">Clear Log</button></div></div></div>
+
+  <div id="waterPage" style="display:none;"><div class="container"><h2>💧 Hydration Tracker</h2><div class="card"><div id="waterGlassesContainer"></div><button id="resetWaterBtn" class="btn-outline">Reset</button></div></div></div>
+</main>
+
+<footer class="footer"><div class="container" style="text-align:center; padding: 1.5rem;">© METAMORPH — Evolve your body. Engineer your habits. Download your destiny.</div></footer>
+
+<!-- WEIGHT GOAL MODAL - Shows immediately after first sign-in -->
+<div id="weightGoalModal" class="modal">
+  <div class="modal-content">
+    <div style="text-align: center; margin-bottom: 0.5rem;">
+      <i class="fas fa-weight-scale" style="font-size: 2.5rem; color: #2b9348;"></i>
+    </div>
+    <h3 style="text-align: center;">Welcome to METAMORPH! 🎉</h3>
+    <p style="text-align: center;">Let's set your weight loss goals for accurate tracking</p>
+    <div class="weight-input-highlight">
+      <div class="input-group"><label><i class="fas fa-user"></i> Your Current Weight (kg)</label><input type="number" id="goalCurrentWeight" step="0.1" placeholder="e.g., 75" autocomplete="off"></div>
+      <div class="input-group"><label><i class="fas fa-bullseye"></i> Your Goal Weight (kg)</label><input type="number" id="goalTargetWeight" step="0.1" placeholder="e.g., 65" autocomplete="off"></div>
+    </div>
+    <button id="saveWeightGoalsBtn" class="btn-primary" style="width:100%; margin-top: 0.5rem;"><i class="fas fa-save"></i> Start My Journey</button>
+    <p style="font-size: 0.7rem; text-align: center; margin-top: 1rem; color: #94a3b8;">You can update these anytime from your profile</p>
+  </div>
+</div>
+
+<!-- Edit Profile Modal (for existing users) -->
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <h3><i class="fas fa-user-circle"></i> Update Weight Goals</h3>
+    <p>Modify your current and target weight</p>
+    <div class="input-group"><label>Current Weight (kg)</label><input type="number" id="userWeight" step="0.1" placeholder="e.g., 75"></div>
+    <div class="input-group"><label>Target Weight (kg)</label><input type="number" id="userGoalWeight" step="0.1" placeholder="e.g., 65"></div>
+    <button id="saveProfileBtn" class="btn-primary" style="width:100%;">Save Changes</button>
+    <button id="closeProfileBtn" class="btn-outline" style="width:100%; margin-top:0.5rem;">Close</button>
+  </div>
+</div>
+
+<script>
+  // ---------- GLOBAL STATE ----------
+  let currentUser = null;
+  let userData = {};
+
+  function getUserStorageKey() { return currentUser ? `METAMORPH_${currentUser.email.replace(/\./g, '_')}` : null; }
+
+  function loadUserData() {
+    if(!currentUser) return;
+    let key = getUserStorageKey();
+    let saved = localStorage.getItem(key);
+    if(saved) { 
+      userData = JSON.parse(saved); 
+    } else { 
+      // New user - no weight goals set yet
+      userData = { 
+        completedDays: [], 
+        lastCompletionDate: "", 
+        workoutProgress: null, 
+        foodLog: [], 
+        waterGlasses: 2, 
+        weightHistory: null, 
+        userProfile: { currentWeight: null, goalWeight: null, isFirstTime: true } 
+      }; 
+    }
+    if(!userData.completedDays) userData.completedDays = [];
+    if(!userData.lastCompletionDate) userData.lastCompletionDate = "";
+    if(!userData.workoutProgress) userData.workoutProgress = [
+      {name:"🔥 Jumping Jacks",calories:100,done:false},{name:"🏃 High Knees",calories:110,done:false},{name:"💪 Burpees",calories:150,done:false},
+      {name:"🧗 Mountain Climbers",calories:120,done:false},{name:"⚡ Squat Jumps",calories:130,done:false},{name:"🚴 Bicycle Crunches",calories:90,done:false},
+      {name:"🏋️ Push-ups",calories:80,done:false},{name:"🏋️‍♀️ Lunges",calories:85,done:false},{name:"🕺 Jump Rope",calories:140,done:false},
+      {name:"🧘 Plank (1 min)",calories:70,done:false},{name:"🏃‍♀️ Running in place",calories:100,done:false},{name:"🤸 Side Shuffles",calories:95,done:false},
+      {name:"💥 Box Jumps",calories:120,done:false},{name:"🧗 Cross-body Climbers",calories:105,done:false},{name:"🌟 Russian Twists",calories:85,done:false}
+    ];
+    if(!userData.foodLog) userData.foodLog = [];
+    if(userData.waterGlasses === undefined) userData.waterGlasses = 2;
+    if(!userData.userProfile) userData.userProfile = { currentWeight: null, goalWeight: null, isFirstTime: true };
+    if(userData.userProfile.isFirstTime === undefined) userData.userProfile.isFirstTime = (userData.userProfile.currentWeight === null);
+    saveUserData();
+  }
+
+  function saveUserData() { if(currentUser) { localStorage.setItem(getUserStorageKey(), JSON.stringify(userData)); } }
+
+  // Check if weight goals are set, if not show modal
+  function checkAndShowWeightModal() {
+    if(!currentUser) return false;
+    if(!userData.userProfile.currentWeight || !userData.userProfile.goalWeight || userData.userProfile.isFirstTime === true) {
+      document.getElementById('weightGoalModal').style.display = 'flex';
+      return false;
+    }
+    return true;
+  }
+
+  // Save weight goals from first-time modal
+  function saveInitialWeightGoals() {
+    let currentW = parseFloat(document.getElementById('goalCurrentWeight').value);
+    let goalW = parseFloat(document.getElementById('goalTargetWeight').value);
+    if(isNaN(currentW) || isNaN(goalW) || currentW <= 0 || goalW <= 0) {
+      showToast("⚠️ Please enter valid weight values");
+      return false;
+    }
+    if(currentW <= goalW) {
+      showToast("⚠️ Goal weight should be less than current weight for weight loss journey");
+      return false;
+    }
+    userData.userProfile.currentWeight = currentW;
+    userData.userProfile.goalWeight = goalW;
+    userData.userProfile.isFirstTime = false;
+    // Initialize weight history based on current weight
+    userData.weightHistory = [currentW, currentW-0.3, currentW-0.7, currentW-1.0, currentW-1.3, currentW-1.6, currentW-1.9];
+    saveUserData();
+    document.getElementById('weightGoalModal').style.display = 'none';
+    updateAllFromUserData();
+    showToast(`✨ Goals set! Lose ${(currentW - goalW).toFixed(1)}kg in 30 days. Let's do this!`);
+    return true;
+  }
+
+  function updateAllFromUserData() { 
+    if(currentUser) { 
+      renderChallengeGrid(); 
+      renderWorkoutPage(); 
+      renderNutritionPage(); 
+      renderWaterTracker(); 
+      updateDashboardNumbers(); 
+      updateAllCharts(); 
+    } 
+  }
+
+  function renderChallengeGrid() {
+    let container = document.getElementById('challengeDaysGrid');
+    if(!container) return;
+    let completed = userData.completedDays || [];
+    let lastDate = userData.lastCompletionDate || "";
+    let today = new Date().toDateString();
+    let canComplete = (lastDate !== today);
+    let nextDay = completed.length + 1;
+    if(nextDay > 30) nextDay = 30;
+    let html = '';
+    for(let i=1;i<=30;i++) {
+      let isCompleted = completed.includes(i);
+      let isNext = (i === nextDay && !isCompleted);
+      let locked = (!isCompleted && i !== nextDay);
+      let classes = 'day-badge';
+      if(isCompleted) classes += ' day-completed';
+      if(locked) classes += ' day-locked';
+      if(isNext && canComplete && !isCompleted) classes += ' day-current';
+      html += `<div class="${classes}">${i}</div>`;
+    }
+    container.innerHTML = html;
+    let percent = (completed.length / 30) * 100;
+    let fillEl = document.getElementById('challengeFill');
+    if(fillEl) fillEl.style.width = percent+"%";
+    let msgEl = document.getElementById('nextDayMsg');
+    if(msgEl) msgEl.innerHTML = canComplete ? `✨ You can complete Day ${nextDay} today!` : `✅ Already marked today. Come back tomorrow for Day ${nextDay}.`;
+  }
+
+  function completeToday() {
+    if(!currentUser) { showToast("Please sign in with Google first!"); return; }
+    if(!userData.userProfile.currentWeight || !userData.userProfile.goalWeight) {
+      showToast("⚠️ Please set your weight goals first!");
+      document.getElementById('weightGoalModal').style.display = 'flex';
+      return;
+    }
+    let today = new Date().toDateString();
+    if(userData.lastCompletionDate === today) { showToast("⚠️ Already completed a day today!"); return; }
+    let nextDay = userData.completedDays.length + 1;
+    if(nextDay > 30) { showToast("🏆 You've completed all 30 days! Amazing!"); return; }
+    userData.completedDays.push(nextDay);
+    userData.lastCompletionDate = today;
+    if(userData.userProfile.currentWeight > userData.userProfile.goalWeight) {
+      userData.userProfile.currentWeight = Math.max(userData.userProfile.goalWeight, userData.userProfile.currentWeight - 0.2);
+      userData.weightHistory.push(userData.userProfile.currentWeight);
+      if(userData.weightHistory.length > 7) userData.weightHistory.shift();
+    }
+    saveUserData();
+    renderChallengeGrid();
+    updateDashboardNumbers();
+    updateAllCharts();
+    showToast(`🎉 Day ${nextDay} completed! Keep crushing it!`);
+  }
+
+  function renderWorkoutPage() {
+    let container = document.getElementById('workoutExerciseList');
+    if(!container) return;
+    let workouts = userData.workoutProgress;
+    let completedCount = workouts.filter(w=>w.done).length;
+    let html = '';
+    workouts.forEach((ex,idx)=>{ html+=`<div class="exercise-item"><div class="exercise-name ${ex.done?'completed-exercise':''}">${ex.name}</div><div class="exercise-cals"><i class="fas fa-fire"></i> ~${ex.calories} kcal</div><label><input type="checkbox" class="workout-checkbox" data-idx="${idx}" ${ex.done?'checked':''}> Done</label></div>`; });
+    container.innerHTML = html;
+    let fillEl = document.getElementById('workoutProgressFill');
+    if(fillEl) fillEl.style.width = `${(completedCount/15)*100}%`;
+    let countEl = document.getElementById('workoutCompletedCount');
+    if(countEl) countEl.innerText = `${completedCount}/15 exercises completed`;
+    document.querySelectorAll('.workout-checkbox').forEach(cb=>cb.addEventListener('change',(e)=>{ let idx=parseInt(cb.dataset.idx); userData.workoutProgress[idx].done=cb.checked; saveUserData(); renderWorkoutPage(); updateDashboardNumbers(); if(cb.checked) showToast(`✅ ${userData.workoutProgress[idx].name} logged!`); }));
+  }
+
+  function renderNutritionPage() {
+    let logDiv=document.getElementById('foodLogList'); if(!logDiv) return;
+    let totalCals=0,totalPro=0,totalCar=0,totalFat=0;
+    let logsHtml=''; (userData.foodLog||[]).forEach((item,idx)=>{ logsHtml+=`<div class="food-item"><span><strong>${item.description}</strong><br><small>${item.time}</small></span><span>🔥 ${item.calories} kcal | P:${item.protein}g C:${item.carbs}g F:${item.fats}g</span><button class="remove-food" data-idx="${idx}" style="background:none;border:none;color:#ef4444;cursor:pointer;"><i class="fas fa-trash"></i></button></div>`; totalCals+=item.calories; totalPro+=item.protein; totalCar+=item.carbs; totalFat+=item.fats; });
+    logDiv.innerHTML=logsHtml||'<p style="color: #94a3b8;">No meals logged. Describe your meal above!</p>';
+    document.getElementById('totalCaloriesSpan').innerText=totalCals; document.getElementById('totalProteinSpan').innerText=totalPro; document.getElementById('totalCarbsSpan').innerText=totalCar; document.getElementById('totalFatsSpan').innerText=totalFat;
+    document.querySelectorAll('.remove-food').forEach(btn=>btn.addEventListener('click',()=>{ let i=parseInt(btn.dataset.idx); userData.foodLog.splice(i,1); saveUserData(); renderNutritionPage(); updateDashboardNumbers(); showToast("Removed"); }));
+  }
+
+  function renderWaterTracker() { let cont=document.getElementById('waterGlassesContainer'); if(!cont) return; let glasses=userData.waterGlasses||0; let html=`<div><strong>${glasses}/8 glasses</strong><div class="progress"><div class="progress-fill" style="width:${(glasses/8)*100}%"></div></div><div style="display:flex;flex-wrap:wrap;gap:0.5rem;">`; for(let i=1;i<=8;i++) html+=`<button class="${i<=glasses?'btn-primary':'btn-outline'}" data-glass="${i}" style="border-radius:60px;">💧 ${i}</button>`; html+=`</div></div>`; cont.innerHTML=html; document.querySelectorAll('[data-glass]').forEach(btn=>btn.addEventListener('click',(e)=>{ userData.waterGlasses=parseInt(btn.dataset.glass); saveUserData(); renderWaterTracker(); updateDashboardNumbers(); showToast(`Water: ${userData.waterGlasses}/8`); })); }
+
+  function updateDashboardNumbers() { 
+    if(!currentUser) return; 
+    let profile=userData.userProfile;
+    if(!profile.currentWeight || !profile.goalWeight) {
+      document.getElementById('dashCurrentWeight') && (document.getElementById('dashCurrentWeight').innerText="-- kg");
+      document.getElementById('dashGoalWeight') && (document.getElementById('dashGoalWeight').innerText="--");
+      document.getElementById('weightLeft') && (document.getElementById('weightLeft').innerText="--");
+      return;
+    }
+    let burned=userData.workoutProgress.filter(e=>e.done).reduce((s,e)=>s+e.calories,0); 
+    let streak=userData.completedDays.length; 
+    let left=(profile.currentWeight-profile.goalWeight).toFixed(1); 
+    document.getElementById('dashCurrentWeight') && (document.getElementById('dashCurrentWeight').innerText=profile.currentWeight.toFixed(1)+" kg"); 
+    document.getElementById('dashGoalWeight') && (document.getElementById('dashGoalWeight').innerText=profile.goalWeight); 
+    document.getElementById('weightLeft') && (document.getElementById('weightLeft').innerText=left>0?left:"0"); 
+    document.getElementById('totalBurnCalsDash') && (document.getElementById('totalBurnCalsDash').innerText=burned); 
+    document.getElementById('streakDaysDash') && (document.getElementById('streakDaysDash').innerText=streak); 
+    let completedEx=userData.workoutProgress.filter(e=>e.done).length; 
+    let dailyPercent=Math.min(100, Math.floor((completedEx/15)*40 + ((userData.waterGlasses||0)/8)*30 + (streak/30)*30)); 
+    document.getElementById('dailyProgressFillDash') && (document.getElementById('dailyProgressFillDash').style.width=dailyPercent+"%"); 
+    document.getElementById('dailyPercentTextDash') && (document.getElementById('dailyPercentTextDash').innerText=dailyPercent+"% daily progress"); 
+  }
+
+  function updateAllCharts() { 
+    if(window.wChart)window.wChart.destroy(); if(window.waChart)window.waChart.destroy(); if(window.cChart)window.cChart.destroy(); if(window.woChart)window.woChart.destroy(); 
+    let ctxW=document.getElementById('weightChart')?.getContext('2d'); 
+    if(ctxW && userData.weightHistory) window.wChart=new Chart(ctxW,{type:'line',data:{labels:['Day1','2','3','4','5','6','Today'], datasets:[{label:'Weight (kg)',data:userData.weightHistory,borderColor:'#2b9348',tension:0.2}]}}); 
+    let ctxWat=document.getElementById('waterChart')?.getContext('2d'); if(ctxWat) window.waChart=new Chart(ctxWat,{type:'bar',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{label:'Water (L)',data:[2,2.5,1.8,2.9,3,2.4,2.8],backgroundColor:'#3b82f6'}]}}); 
+    let ctxCal=document.getElementById('caloriesChart')?.getContext('2d'); if(ctxCal) window.cChart=new Chart(ctxCal,{type:'line',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{label:'Calories',data:[1800,1750,1700,1650,1600,1550,1500],borderColor:'#f59e0b'}]}}); 
+    let ctxWork=document.getElementById('workoutCompletionChart')?.getContext('2d'); if(ctxWork) window.woChart=new Chart(ctxWork,{type:'bar',data:{labels:['HIIT','Yoga','Strength','Cardio','Walk','Stretch'], datasets:[{label:'Completion %',data:[75,80,70,85,90,78],backgroundColor:'#10b981'}]}}); 
+  }
+
+  function exportToExcel() {
+    if(!currentUser) { showToast("Sign in to download your data"); return; }
+    let rows = [["Date","Day Completed","Workouts Done","Calories Burned","Meals Logged","Total Calories Eaten","Water Glasses","Current Weight","Goal Weight"]];
+    let completedDaysList = userData.completedDays || [];
+    let workoutsDone = userData.workoutProgress.filter(w=>w.done).length;
+    let burned = userData.workoutProgress.filter(w=>w.done).reduce((s,w)=>s+w.calories,0);
+    let mealsCount = (userData.foodLog||[]).length;
+    let eatenCals = (userData.foodLog||[]).reduce((s,m)=>s+m.calories,0);
+    let water = userData.waterGlasses||0;
+    let currentW = userData.userProfile.currentWeight || "--";
+    let goalW = userData.userProfile.goalWeight || "--";
+    rows.push([new Date().toDateString(), completedDaysList.length, workoutsDone, burned, mealsCount, eatenCals, water, currentW, goalW]);
+    let csv = rows.map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+    let blob = new Blob(["\uFEFF" + csv], {type: "text/csv;charset=utf-8;"});
+    let link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `METAMORPH_${currentUser.email.split('@')[0]}_data.csv`; link.click(); URL.revokeObjectURL(link.href);
+    showToast("Excel/CSV exported successfully!");
+  }
+
+  // Google Sign-In
+  function handleCredentialResponse(response) {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    currentUser = { email: payload.email, name: payload.name };
+    document.getElementById('googleLoginBtn').style.display = 'none';
+    document.getElementById('userInfo').style.display = 'flex';
+    document.getElementById('userEmail').innerText = payload.email.split('@')[0];
+    loadUserData();
+    updateAllFromUserData();
+    showToast(`Welcome ${payload.name}!`);
+    // Show weight goal modal if first time or no goals set
+    setTimeout(() => { checkAndShowWeightModal(); }, 500);
+  }
+
+  window.onload = () => { 
+    google.accounts.id.initialize({ 
+      client_id: "355788548669-9jbong2u1eonadqa8l79hfhvtf03r46i.apps.googleusercontent.com", 
+      callback: handleCredentialResponse 
+    }); 
+    google.accounts.id.renderButton(document.getElementById("googleLoginBtn"), { theme: "outline", size: "medium", width: 220 }); 
+  };
+
+  document.getElementById('signOutBtn')?.addEventListener('click',()=>{ currentUser=null; localStorage.removeItem(getUserStorageKey()); document.getElementById('googleLoginBtn').style.display='block'; document.getElementById('userInfo').style.display='none'; showToast("Signed out"); switchPage('landing'); });
+  
+  function saveProfile(weight,goal){ userData.userProfile={currentWeight:parseFloat(weight),goalWeight:parseFloat(goal),isFirstTime:false}; userData.weightHistory=[userData.userProfile.currentWeight, userData.userProfile.currentWeight-0.2, userData.userProfile.currentWeight-0.5, userData.userProfile.currentWeight-0.8, userData.userProfile.currentWeight-1.1, userData.userProfile.currentWeight-1.4, userData.userProfile.currentWeight-1.7]; saveUserData(); updateAllCharts(); updateDashboardNumbers(); showToast("Profile updated!"); }
+  
+  function switchPage(pageId) { 
+    document.getElementById('landingPage').style.display=pageId==='landing'?'block':'none'; 
+    document.getElementById('dashboardPage').style.display=pageId==='dashboard'?'block':'none'; 
+    document.getElementById('challengePage').style.display=pageId==='challenge'?'block':'none'; 
+    document.getElementById('workoutPage').style.display=pageId==='workout'?'block':'none'; 
+    document.getElementById('nutritionPage').style.display=pageId==='nutrition'?'block':'none'; 
+    document.getElementById('waterPage').style.display=pageId==='water'?'block':'none'; 
+    if(pageId==='dashboard'){ updateAllCharts(); updateDashboardNumbers(); } 
+    if(pageId==='challenge' && currentUser) renderChallengeGrid(); 
+    if(pageId==='workout') renderWorkoutPage(); 
+    if(pageId==='nutrition') renderNutritionPage(); 
+    if(pageId==='water') renderWaterTracker(); 
+  }
+
+  document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>switchPage(el.dataset.page)));
+  document.getElementById('startChallengeBtn')?.addEventListener('click',()=>switchPage('challenge'));
+  document.getElementById('trackProgressBtn')?.addEventListener('click',()=>switchPage('dashboard'));
+  document.getElementById('darkModeToggle')?.addEventListener('click',()=>document.body.classList.toggle('dark'));
+  document.getElementById('completeTodayBtn')?.addEventListener('click',completeToday);
+  document.getElementById('resetWorkoutsBtn')?.addEventListener('click',()=>{ userData.workoutProgress.forEach(w=>w.done=false); saveUserData(); renderWorkoutPage(); updateDashboardNumbers(); showToast("Workouts reset"); });
+  document.getElementById('resetWaterBtn')?.addEventListener('click',()=>{ userData.waterGlasses=0; saveUserData(); renderWaterTracker(); updateDashboardNumbers(); });
+  document.getElementById('analyzeMealBtn')?.addEventListener('click',()=>{ let desc=document.getElementById('mealDescription').value.trim(); if(!desc)return; let est={calories:250,protein:15,carbs:20,fats:10}; let d=desc.toLowerCase(); if(d.includes('chicken')) est={calories:280,protein:30,carbs:2,fats:12}; if(d.includes('rice')) est={calories:200,protein:4,carbs:45,fats:1}; if(d.includes('salad')) est={calories:120,protein:5,carbs:15,fats:6}; if(d.includes('egg')) est={calories:140,protein:12,carbs:1,fats:9}; document.getElementById('aiSuggestion').innerHTML=`🤖 AI Estimate: "${desc}" → ${est.calories} kcal, ${est.protein}g P, ${est.carbs}g C, ${est.fats}g F. <button id="confirmAddBtn" class="btn-primary" style="margin-left:10px; padding:4px 12px;">Add to Log</button>`; document.getElementById('confirmAddBtn')?.addEventListener('click',()=>{ userData.foodLog.push({...est, description:desc, time:new Date().toLocaleTimeString()}); saveUserData(); renderNutritionPage(); updateDashboardNumbers(); document.getElementById('mealDescription').value=''; document.getElementById('aiSuggestion').innerHTML=''; showToast("Meal added!"); }); });
+  document.getElementById('clearMealsBtn')?.addEventListener('click',()=>{ userData.foodLog=[]; saveUserData(); renderNutritionPage(); updateDashboardNumbers(); showToast("Food log cleared"); });
+  document.getElementById('downloadExcelBtn')?.addEventListener('click',exportToExcel);
+  document.getElementById('saveWeightGoalsBtn')?.addEventListener('click',saveInitialWeightGoals);
+  
+  const profileModal=document.getElementById('profileModal'); 
+  document.getElementById('showProfileBtn')?.addEventListener('click',()=>{ 
+    if(!currentUser){ showToast("Please sign in first"); return; }
+    document.getElementById('userWeight').value=userData.userProfile?.currentWeight||72; 
+    document.getElementById('userGoalWeight').value=userData.userProfile?.goalWeight||65; 
+    profileModal.style.display='flex'; 
+  });
+  document.getElementById('closeProfileBtn')?.addEventListener('click',()=>profileModal.style.display='none');
+  document.getElementById('saveProfileBtn')?.addEventListener('click',()=>{ let w=document.getElementById('userWeight').value; let g=document.getElementById('userGoalWeight').value; if(w&&g) saveProfile(w,g); profileModal.style.display='none'; });
+  
+  function showToast(msg){ let t=document.createElement('div'); t.className='notification-toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); }
+  
+  console.log("METAMORPH — Neural Weight Loss OS ready. Google OAuth configured.");
+</script>
+</body>
+</html>
